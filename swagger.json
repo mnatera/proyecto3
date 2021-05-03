@@ -1,0 +1,851 @@
+
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Delilah Resto",
+    "description": "sistema de pedidos online para un restaurante, este proyecto permita realizar operaciones CRUD sobre una estructura de datos",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:4452",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Usuarios",
+      "description": "Usuarios registrados"
+    },
+    {
+      "name": "Productos",
+      "description": "Productos ofrecidos por el restaurante"
+    },
+    {
+      "name": "Pedido",
+      "description": "Ordenes recibidas de los usuarios"
+    }
+  ],
+
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+
+  "paths": {
+    
+    "/newUser": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "description": "Ingresar nuevos usuarios en la base de datos",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Usuario",
+            "description": "Recibe los datos generales del usuario que seran guardados en la base de datos",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/newUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull usuario registrado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "usuario autenticado"
+                },
+                "Token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiY2FtaWxhIiwicGFzcyI6IjEyMzQ1NiIsInJvbCI6InVzZXIiLCJpZCI6MiwiaWF0IjoxNjE5Nzk2MTg3fQ.Lp46Rh870lU920bKZB7iuCiCmV8OF15GDlzse1TNvao"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error en los datos ingresados",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "Ingresar datos"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/loguinUser": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "summary": "Loguin de un usuario",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Loguin",
+            "description": "se necesita el username y contraseña para validar con la información que fue ingresada en la base de datos anteriormente",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/loguinUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull usuario autenticado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "usuario autenticado"
+                },
+                "Token": {
+                  "type": "string",
+                  "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoiY2FtaWxhIiwicGFzcyI6IjEyMzQ1NiIsInJvbCI6InVzZXIiLCJpZCI6MiwiaWF0IjoxNjE5Nzk2MTg3fQ.Lp46Rh870lU920bKZB7iuCiCmV8OF15GDlzse1TNvao"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error usuario o clave invalida",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "usuario o clave invalida"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/showUser": {
+      "get": {
+        "tags": [
+          "Usuario"
+        ],
+        "summary": "Muestra los Usuarios registrados",
+        "description": "Los administradores  por su rol de Admin pueden ver todos los usuarios registrados, los usuarios solo podran ver sus datos.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "autenticacion",
+            "description": "los administradores y los usuarios reciben un token para cada uno y con esto se restringen los accesos para cada uno",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull",
+            "schema": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "username": {
+                    "type": "varchar",
+                    "example": "sara"
+                  },
+                  "fullname": {
+                    "type": "varchar",
+                    "example": "sara natera alzate"
+                  },
+                  "correo": {
+                    "type": "varchar",
+                    "example":"sara@gmail.com"
+                  },
+                  "celular": {
+                    "type": "varchar",
+                    "example":"3002356745"
+                  },
+                  "direccion": {
+                    "type": "varchar",
+                    "example": "av 80 # 70- 70"
+                  },
+                  "contraseña": {
+                    "type": "varchar",
+                    "example": "789123"
+                  },
+                  "rol": {
+                    "type": "varchar",
+                    "example": "Admin"
+                  },
+                  "id": {
+                    "type": "int",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "usurio no se encuentra en la base datos",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "no hay usuarios registrados"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/newProduct": {
+      "post": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": " Ingresar nuevo producto",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "producto",
+            "description": "se necesita ingresar el nombre del producto y el precio de los alimentos",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/newProduct"
+            }
+          },
+          {
+            "in": "header",
+            "name": "autenticacion",
+            "description": "Se necesita un token como administrador para agregar nuevos productos:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoic2FyYSIsInBhc3MiOiI3ODkxMjMiLCJyb2wiOiJBZG1pbiIsImlkIjozLCJpYXQiOjE2MTk3OTk0NDd9.ssuzxyFK783vy0MCcU44rsRMWWLl40V8ekujpbONH1U",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "Producto ingresado"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Producto ya se encuentra registrado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "nombre del producto ya esta registrado"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "un usuario no posee permisos para continuar",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/showProduct": {
+      "get": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "Mostrar productos que se ofrecen en el restaurante",
+        "description": "No se necesita parametros",
+        "responses": {
+          "200": {
+            "description": "Successfull mostrar los productos ",
+            "schema": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "nombre_producto": {
+                    "type": "varchar",
+                    "example": "pan chorizo"
+                  },
+                  "precio": {
+                    "type": "int",
+                    "example":40000
+                  },
+                  "id": {
+                    "type": "int",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/updateProduct": {
+      "put": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "Actualizar producto",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "update",
+            "description": "se necesita el id,nombre del producto y precio y token de administrador",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateProduct"
+            }
+          },
+          {
+            "in": "header",
+            "name": "autenticacion",
+            "description": "Token como administrador administrador: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoic2FyYSIsInBhc3MiOiI3ODkxMjMiLCJyb2wiOiJBZG1pbiIsImlkIjozLCJpYXQiOjE2MTk3OTk0NDd9.ssuzxyFK783vy0MCcU44rsRMWWLl40V8ekujpbONH1U",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Producto actualizado correctamente",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "Succesfull"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "No se puede actualizar el producto",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "estado": {
+              "type": "string",
+              "example": "Error  + error"
+            }
+          }
+        }
+      }
+    },
+
+    "/deleteProduct": {
+      "delete": {
+        "tags": [
+          "Producto"
+        ],
+        "summary": "Eliminar un Producto",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "delete",
+            "description": "se necesita un ID para eliminar el producto y un token de administrador",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/deleteProduct"
+            }
+          },
+          {
+            "in": "header",
+            "name": "autenticacion",
+            "description": "Token como administrador administrador: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoic2FyYSIsInBhc3MiOiI3ODkxMjMiLCJyb2wiOiJBZG1pbiIsImlkIjozLCJpYXQiOjE2MTk3OTk0NDd9.ssuzxyFK783vy0MCcU44rsRMWWLl40V8ekujpbONH1U",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "producto eliminado",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "Succesfull"
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Producto que no pudo ser eliminado",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "estado": {
+                "type": "string",
+                "example": "Error  + error"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/newOrders": {
+      "post": {
+        "tags": [
+          "Pedido"
+        ],
+        "summary": "Registrar un pedido nuevo",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "crearpedido",
+            "description": "se necesita los datos de estado,id_producto,pago,cantidad,id_usuario para registarlo en la tabla de pedido",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/newOrders"
+            }
+          },
+          {
+            "in": "header",
+            "name": "autenticacion",
+            "description": "Token como administrador administrador: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoic2FyYSIsInBhc3MiOiI3ODkxMjMiLCJyb2wiOiJBZG1pbiIsImlkIjozLCJpYXQiOjE2MTk3OTk0NDd9.ssuzxyFK783vy0MCcU44rsRMWWLl40V8ekujpbONH1U",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pedido resgistrado correctamente",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "se ingreso pedido correctamente"
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Pedido no fue registrado",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "estado": {
+                "type": "string",
+                "example": "Error"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/showOrders": {
+      "get": {
+        "tags": [
+          "Pedido"
+        ],
+        "summary": "Mostrar pedidos",
+        "description": "No se necesita Parametros,si es un usuario solo se mostrara los pedidos de él, si es administrador se mostraran todos los pedidos en cola",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "autenticacion",
+            "description": "Token como administrador: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoic2FyYSIsInBhc3MiOiI3ODkxMjMiLCJyb2wiOiJBZG1pbiIsImlkIjozLCJpYXQiOjE2MTk3OTk0NDd9.ssuzxyFK783vy0MCcU44rsRMWWLl40V8ekujpbONH1U",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+      
+        "responses": {
+          "200": {
+            "description": "Successfull mostrar todos los pedidos",
+            "schema": {
+              "type": "array",
+              "items": {
+                  "properties": {
+                    "estado": {
+                      "type": "varchar",
+                      "example": "en proceso"
+                    },
+                    "hora": {
+                      "type": "time",
+                      "example": "20:17:00"
+                    },
+                    "id_producto": {
+                      "type": "int",
+                      "example": 1
+                    },
+                    "pago": {
+                      "type": "varchar",
+                      "example": "debito"
+                    },
+                    "cantidad": {
+                      "type": "int",
+                      "example": 1
+                    },
+                    "Id_usuario": {
+                      "type": "int",
+                      "example": 1
+                    }                  
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+
+    "/updateOrders": {
+      "put": {
+        "tags": [
+          "Pedido"
+        ],
+        "summary": "Actualizar el estado de un Pedido",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "actualizar estado del pedido",
+            "description": "se necesita los datos de estado y id y un token de administrador",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateOrders"
+            }
+          },
+          {
+            "in": "header",
+            "name": "autenticacion",
+            "description": "Token como administrador: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoic2FyYSIsInBhc3MiOiI3ODkxMjMiLCJyb2wiOiJBZG1pbiIsImlkIjozLCJpYXQiOjE2MTk3OTk0NDd9.ssuzxyFK783vy0MCcU44rsRMWWLl40V8ekujpbONH1U",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull Actualizacion correcta",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "Succesfull"
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Error en la actualización",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "estado": {
+                "type": "string",
+                "example": "Error"
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/deletePedido": {
+      "delete": {
+        "tags": [
+          "Pedido"
+        ],
+        "summary": "Eliminar Pedido",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "eliminarpedido",
+            "description": "se necesita los datos del id del pedido  para eliminar de la tabla de pedido y un token de administrador",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/deletePedido"
+            }
+          },
+          {
+            "in": "header",
+            "name": "autenticacion",
+            "description": "Token como administrador: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjoic2FyYSIsInBhc3MiOiI3ODkxMjMiLCJyb2wiOiJBZG1pbiIsImlkIjozLCJpYXQiOjE2MTk3OTk0NDd9.ssuzxyFK783vy0MCcU44rsRMWWLl40V8ekujpbONH1U",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull Pedido Eliminado Correctamente",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "estado": {
+                  "type": "string",
+                  "example": "Successfull"
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Error al eliminar un pedido",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "estado": {
+                "type": "string",
+                "example": "Error"
+              }
+            }
+          }
+        }
+      }
+    }
+
+  },
+
+  "definitions": {
+
+    "loguinUser": {
+      "type": "object",
+      "required": [
+        "Username",
+        "Password"
+      ],
+      "properties": {
+        "username": {
+          "type": "varchar",
+          "example": "camila"
+        },
+        "contraseña": {
+          "type": "varchar",
+          "example": "123456"
+        }
+      }
+    },
+
+    "newUser": {
+      "type": "object",
+      "required": [
+        "username",
+        "fullname",
+        "correo",
+        "celular",
+        "direccion",
+        "contraseña",
+        "rol"
+      ],
+      "properties": {
+        "username": {
+          "type": "varchar",
+          "example": "camila"
+        },
+        "fullname": {
+          "type": "varchar",
+          "example": "camila natera alzate"
+        },
+        "correo": {
+          "type": "varchar",
+          "example": "cami@gmail.com"
+        },
+        "celular": {
+          "type": "varchar",
+          "example": "3002346745"
+        },
+        "direccion": {
+          "type": "varchar",
+          "example": "av 80 # 70-70"
+        },
+        "contraseña": {
+          "type": "varchar",
+          "example": "123456"
+        },
+        "rol": {
+          "type": "varchar",
+          "example": "User"
+        }
+      }
+    },
+
+    "newProduct": {
+      "type": "object",
+      "required": [
+        "nombre_producto",
+        "precio"
+      ],
+      "properties": {
+        "nombre_producto": {
+          "type": "varchar",
+          "example": "Melon"
+        },
+        "precio": {
+          "type": "int",
+          "example": 1500
+        }
+      }
+    },
+
+    "updateProduct": {
+      "type": "object",
+      "required": [
+        "nombre_producto",
+            "precio",
+            "id"
+      ],
+      "properties": {
+        "nombre_producto": {
+          "type": "varchar",
+          "example":"Melon"
+        },
+        "precio": {
+          "type": "int",
+          "example": 3000
+        },
+        "id": {
+          "type": "int",
+          "example": 1
+        }
+      }
+    },
+
+    "deleteProduct": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "int",
+          "example": 1
+        }
+      }
+    },
+
+    "newOrders": {
+      "type": "object",
+      "required": [
+        "estado",
+        "hora",
+       "id_producto",
+       "pago",
+	     "cantidad",
+       "id_usuario"
+      ],
+      "properties": {
+        "estado": {
+          "type": "varchar",
+          "example": "en proceso"
+        },
+        "hora": {
+          "type": "time",
+          "example": "20:17:00"
+        },
+        "id_producto": {
+          "type": "int",
+          "example": 1
+        },
+        "pago": {
+          "type": "varchar",
+          "example": "debito"
+        },
+        "cantidad": {
+          "type": "int",
+          "example": 1
+        },
+        "Id_usuario": {
+          "type": "int",
+          "example": 1
+        }
+      }
+    },
+
+    "deletePedido": {
+      "type": "object",
+      "required": [
+        "ID_Pedido"
+      ],
+      "properties": {
+        "id": {
+          "type": "int",
+          "example": 4
+        }
+      }
+    },
+
+    "updateOrders": {
+      "type": "object",
+      "required": [
+        "estado",
+        "id"
+      ],
+      "properties": {
+        "estado": {
+          "type": "varchar",
+          "example":"terminado"
+        },
+        "id": {
+          "type": "int",
+          "example": 2
+        }
+      }
+    }
+
+  }
+}
