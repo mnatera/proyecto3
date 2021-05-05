@@ -16,6 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `intermediapp`
+--
+
+DROP TABLE IF EXISTS `intermediapp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `intermediapp` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_pedido` int DEFAULT NULL,
+  `id_producto` int DEFAULT NULL,
+  `cantidad` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `intermediapp`
+--
+
+LOCK TABLES `intermediapp` WRITE;
+/*!40000 ALTER TABLE `intermediapp` DISABLE KEYS */;
+/*!40000 ALTER TABLE `intermediapp` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pedido`
 --
 
@@ -25,10 +50,8 @@ DROP TABLE IF EXISTS `pedido`;
 CREATE TABLE `pedido` (
   `estado` varchar(50) DEFAULT NULL,
   `hora` time DEFAULT NULL,
-  `id_producto` int DEFAULT NULL,
   `pago` varchar(50) DEFAULT NULL,
   `id` int NOT NULL AUTO_INCREMENT,
-  `cantidad` int DEFAULT NULL,
   `id_usuario` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -106,4 +129,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-03  8:21:30
+-- Dump completed on 2021-05-05 15:20:03

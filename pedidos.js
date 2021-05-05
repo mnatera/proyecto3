@@ -2,16 +2,14 @@ const Sequelize = require ("sequelize");
 const sequelize= new Sequelize("mysql://root:root@127.0.0.1:3306/pedidos");
 
 
-
-
-function insertarpedidoproducto (id_pedido,element) {
+function insertarPP (id_pedido,element) {
     let{
-        id_producto,
+        id,
         cantidad
     } =element;
-    sequelize.query ('INSERT INTO pedido (id_producto,cantidad,id_pedido) VALUES ( "' + id_producto + '","' + id_pedido + '","' + cantidad + '")',{
-    /*type: sequelize.QueryTypes.INSERT*/
-}).then(respuestaInsertarPP  => {
+    sequelize.query ('INSERT INTO intermediaPP (id_pedido,id_producto,cantidad) VALUES ( "' + id_pedido + '","' + id + '","' + cantidad + '")',{
+type: sequelize.QueryTypes.INSERT})
+.then(respuestaInsertarPP  => {
     return true;
 }).catch((error ) => {return false;});
 }
@@ -20,21 +18,24 @@ module.exports = {
 insertarpedido:async (req,res)=>{
     const{
         estado,
-        id_producto,
         pago,
-        cantidad,
-        id_usuario
+        id_usuario,
+        productos
     }=req.body
 const data = new Date ();
 const tms = `${data.getFullYear()}-${data.getMonth()}-${data.getDay()} ${data.getHours()}:${data.getMinutes()}:${data.getSeconds()}`;
-sequelize.query ('INSERT INTO pedido (estado,hora,id_producto,pago,cantidad,id_usuario) VALUES  ("' + estado + '", "' + tms + '", "' + id_producto + '", "' + pago+ '", "' + cantidad+ '","' + id_usuario + '")',/* ( "' + estado + '","' + tms + '", "'+id_producto+ '", "' + pago + '","' + cantidad+ '","' + id_usuario + '")',*/{
+sequelize.query ('INSERT INTO pedido (estado,hora,pago,id_usuario) VALUES  ("' + estado + '", "' + tms + '", "' + pago+ '","' + id_usuario + '")',/* ( "' + estado + '","' + tms + '", "'+id_producto+ '", "' + pago + '","' + cantidad+ '","' + id_usuario + '")',*/{
 type: sequelize.QueryTypes.INSERT
 }).then(respuestaInsertarP => {
-    const capturarposicion= respuestaInsertarP[respuestaInsertarP.lenght - 1];
+    const capturarposicion= respuestaInsertarP[respuestaInsertarP.length - 1];
     console.log (respuestaInsertarP);
     if(capturarposicion==0) {
         res.json ({ status:"no se ingreso pedido"});
     }else{
+        const id_pedido = respuestaInsertarP[0];
+        for (let i = 0 ; i < productos.length; i++){
+            insertarPP(id_pedido,productos[i]);   
+        }
         res.json({status:"se ingreso pedido correctamente"})
     }
 
